@@ -229,10 +229,28 @@ def gemini_ocr_extract(image_path: str) -> dict:
             "Do not include any extra text outside JSON."
         )
 
-        response = model.generate_content([
-            { 'text': prompt },
-            { 'inline_data': { 'mime_type': mime, 'data': data } }
-        ])
+        # Add timeout and retry logic for Gemini API
+        import time
+        max_retries = 3
+        response = None
+        
+        for attempt in range(max_retries):
+            try:
+                response = model.generate_content([
+                    { 'text': prompt },
+                    { 'inline_data': { 'mime_type': mime, 'data': data } }
+                ], request_options={'timeout': 30})
+                break
+            except Exception as e:
+                if "overloaded" in str(e).lower() and attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)  # Exponential backoff: 1s, 2s, 4s
+                    continue
+                else:
+                    # If all retries failed, return empty result instead of crashing
+                    return { 'raw_text': '', 'name': None, 'expiry': None }
+
+        if not response:
+            return { 'raw_text': '', 'name': None, 'expiry': None }
 
         raw_response = (response.text or '').strip()
         name = None
