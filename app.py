@@ -210,7 +210,7 @@ def gemini_ocr_extract(image_path: str) -> dict:
     Returns dict: { 'raw_text': str, 'name': str|None, 'expiry': str|None }
     """
     try:
-        api_key = os.getenv('GEMINI_API_KEY', 'AIzaSyDUG9Gb_54OKrZmZOGr3ovxX-Rqpa3Tpn8')
+        api_key = os.getenv('GEMINI_API_KEY')
         if not api_key:
             return { 'raw_text': '', 'name': None, 'expiry': None }
         genai.configure(api_key=api_key)
@@ -273,7 +273,7 @@ def gemini_ocr_extract(image_path: str) -> dict:
 def gemini_expiry_only(raw_text: str) -> str:
     """Ask Gemini to return only expiry in MM/YY from provided raw OCR text."""
     try:
-        api_key = os.getenv('GEMINI_API_KEY', 'AIzaSyDUG9Gb_54OKrZmZOGr3ovxX-Rqpa3Tpn8')
+        api_key = os.getenv('GEMINI_API_KEY')
         if not api_key:
             return ''
         genai.configure(api_key=api_key)
@@ -294,7 +294,7 @@ def gemini_expiry_only(raw_text: str) -> str:
 def gemini_name_only(image_path: str) -> str:
     """Ask Gemini to return only the medicine product name as plain text as a last-resort fallback."""
     try:
-        api_key = os.getenv('GEMINI_API_KEY', 'AIzaSyDUG9Gb_54OKrZmZOGr3ovxX-Rqpa3Tpn8')
+        api_key = os.getenv('GEMINI_API_KEY')
         if not api_key:
             return ''
         genai.configure(api_key=api_key)
@@ -322,7 +322,7 @@ def get_medicine_info_with_gemini(medicine_name):
     """
     try:
         # Configure Gemini API
-        api_key = os.getenv('GEMINI_API_KEY', 'AIzaSyDUG9Gb_54OKrZmZOGr3ovxX-Rqpa3Tpn8')
+        api_key = os.getenv('GEMINI_API_KEY')
         
         if not api_key:
             return "API key not configured. Please set up your Gemini API key."
