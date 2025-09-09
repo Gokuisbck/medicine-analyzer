@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediScan - Medicine Label Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-pills"></i>
+                    <h1>MediScan</h1>
+                </div>
+                <p class="tagline">AI-Powered Medicine Label Analysis</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section" id="uploadSection">
+                <div class="upload-card">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h2>Upload Medicine Label</h2>
+                    <p>Take a photo or upload an image of your medicine label to get instant analysis</p>
+                    
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="file-input-wrapper">
+                            <input type="file" id="fileInput" name="file" accept="image/*" required>
+                            <label for="fileInput" class="file-input-label">
+                                <i class="fas fa-camera"></i>
+                                <span>Choose Image or Take Photo</span>
+                            </label>
+                        </div>
+                        
+                        <div class="preview-container" id="previewContainer" style="display: none;">
+                            <img id="previewImage" src="" alt="Preview">
+                            <button type="button" class="remove-preview" id="removePreview">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <button type="submit" class="analyze-btn" id="analyzeBtn" disabled>
+                            <i class="fas fa-search"></i>
+                            <span>Analyze Medicine</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Loading Section -->
+            <section class="loading-section" id="loadingSection" style="display: none;">
+                <div class="loading-card">
+                    <div class="loading-spinner">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <h3>Analyzing Medicine Label...</h3>
+                    <p>Our AI is extracting information from your image</p>
+                    <div class="loading-steps">
+                        <div class="step active">
+                            <i class="fas fa-eye"></i>
+                            <span>Reading Text</span>
+                        </div>
+                        <div class="step">
+                            <i class="fas fa-brain"></i>
+                            <span>AI Analysis</span>
+                        </div>
+                        <div class="step">
+                            <i class="fas fa-check"></i>
+                            <span>Generating Report</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2>Analysis Results</h2>
+                    <button class="new-analysis-btn" id="newAnalysisBtn">
+                        <i class="fas fa-plus"></i>
+                        New Analysis
+                    </button>
+                </div>
+
+                <div class="results-grid">
+                    <!-- Medicine Info Card -->
+                    <div class="info-card medicine-info">
+                        <div class="card-header">
+                            <i class="fas fa-pills"></i>
+                            <h3>Medicine Information</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="info-item">
+                                <label>Medicine Name:</label>
+                                <span id="medicineName">-</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Expiry Date:</label>
+                                <span id="expiryDate">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Analysis Card -->
+                    <div class="info-card ai-analysis">
+                        <div class="card-header">
+                            <i class="fas fa-robot"></i>
+                            <h3>AI Analysis</h3>
+                        </div>
+                        <div class="card-content" id="aiAnalysisContent">
+                            <!-- AI content will be inserted here -->
+                        </div>
+                    </div>
+
+                    
+
+                    <!-- Image Preview Card -->
+                    <div class="info-card image-preview">
+                        <div class="card-header">
+                            <i class="fas fa-image"></i>
+                            <h3>Uploaded Image</h3>
+                        </div>
+                        <div class="card-content">
+                            <img id="resultImage" src="" alt="Uploaded medicine label">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section class="error-section" id="errorSection" style="display: none;">
+                <div class="error-card">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Analysis Failed</h3>
+                    <p id="errorMessage">Something went wrong. Please try again.</p>
+                    <button class="retry-btn" id="retryBtn">
+                        <i class="fas fa-redo"></i>
+                        Try Again
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 MediScan. AI-Powered Medicine Analysis</p>
+            <p class="disclaimer">This tool is for informational purposes only. Always consult a healthcare professional.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
