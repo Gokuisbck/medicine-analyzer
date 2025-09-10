@@ -301,7 +301,25 @@ def gemini_expiry_only(raw_text: str) -> str:
             "If year is four digits, convert to last two digits. If not confidently present, return empty string.\n\n"
             f"TEXT:\n{raw_text}"
         )
-        resp = model.generate_content(prompt)
+        # Add retry logic
+        import time
+        max_retries = 3
+        resp = None
+        
+        for attempt in range(max_retries):
+            try:
+                resp = model.generate_content(prompt, request_options={'timeout': 30})
+                break
+            except Exception as e:
+                if "overloaded" in str(e).lower() and attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+                    continue
+                else:
+                    return ''
+        
+        if not resp:
+            return ''
+        
         cand = (resp.text or '').strip()
         norm = _normalize_expiry(cand)
         return norm
@@ -324,10 +342,28 @@ def gemini_name_only(image_path: str) -> str:
             "From this medicine label image, output ONLY the product's medicine name (brand or generic). "
             "Do not include price, quantity, taxes, dosage strength, or any other words. Return only the name."
         )
-        response = model.generate_content([
-            { 'text': prompt },
-            { 'inline_data': { 'mime_type': mime, 'data': data } }
-        ])
+        # Add retry logic
+        import time
+        max_retries = 3
+        response = None
+        
+        for attempt in range(max_retries):
+            try:
+                response = model.generate_content([
+                    { 'text': prompt },
+                    { 'inline_data': { 'mime_type': mime, 'data': data } }
+                ], request_options={'timeout': 30})
+                break
+            except Exception as e:
+                if "overloaded" in str(e).lower() and attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+                    continue
+                else:
+                    return ''
+        
+        if not response:
+            return ''
+        
         return (response.text or '').strip()
     except Exception:
         return ''
@@ -364,8 +400,24 @@ def get_medicine_info_with_gemini(medicine_name):
         Keep each section to 1-2 sentences maximum. Be concise and practical.
         """
         
-        # Generate response
-        response = model.generate_content(prompt)
+        # Generate response with retry logic
+        import time
+        max_retries = 3
+        response = None
+        
+        for attempt in range(max_retries):
+            try:
+                response = model.generate_content(prompt, request_options={'timeout': 30})
+                break
+            except Exception as e:
+                if "overloaded" in str(e).lower() and attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)  # Exponential backoff: 1s, 2s, 4s
+                    continue
+                else:
+                    raise e
+        
+        if not response:
+            return "Unable to get medicine information at this time. Please try again later."
         
         return response.text
         
